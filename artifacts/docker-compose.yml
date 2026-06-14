@@ -1,0 +1,56 @@
+services:
+  volume-permissions:
+    image: alpine:3.20
+    container_name: rustfs-volume-permissions
+    volumes:
+      - data0:/data/rustfs0
+      - data1:/data/rustfs1
+      - data2:/data/rustfs2
+      - data3:/data/rustfs3
+    command: sh -c "chown -R 10001:10001 /data/rustfs0 /data/rustfs1 /data/rustfs2 /data/rustfs3"
+    restart: "no"
+    networks:
+      - rustfs-net
+
+  rustfs:
+    image: rustfs/rustfs:latest
+    hostname: rustfs
+    container_name: rustfs
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      RUSTFS_VOLUMES: "/data/rustfs{0...3}"
+      RUSTFS_ACCESS_KEY: rustfsadmin
+      RUSTFS_SECRET_KEY: rustfsadmin
+      RUSTFS_ADDRESS: "0.0.0.0:9000"
+      RUSTFS_CONSOLE_ADDRESS: "0.0.0.0:9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
+      RUSTFS_UNSAFE_BYPASS_DISK_CHECK: "true"
+    volumes:
+      - data0:/data/rustfs0
+      - data1:/data/rustfs1
+      - data2:/data/rustfs2
+      - data3:/data/rustfs3
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/health"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+    restart: unless-stopped
+    depends_on:
+      volume-permissions:
+        condition: service_completed_successfully
+    networks:
+      - rustfs-net
+
+networks:
+  rustfs-net:
+    driver: bridge
+
+volumes:
+  data0:
+  data1:
+  data2:
+  data3:
