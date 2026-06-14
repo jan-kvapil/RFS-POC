@@ -1,4 +1,4 @@
-NOTE: This is simple POC for automated test susite of RustFS. It is intended to be an exercise project. There is no plan to maintain or update it in the future.
+NOTE: This is simple POC for automated test suite of RustFS. It is intended to be an exercise project. There is no plan to maintain or update it in the future.
 
 # RustFS Automated Test Suite
 
