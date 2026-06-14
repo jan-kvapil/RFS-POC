@@ -1,3 +1,5 @@
+NOTE: This is simple POC for automated test susite of RustFS. It is intended to be an exercise project. There is no plan to maintain or update it in the future.
+
 # RustFS Automated Test Suite
 
 Automated test suite for [RustFS](https://github.com/rustfs/rustfs) — an S3-compatible object storage service. Covers data plane (S3 API) and management plane (admin API) testing.
