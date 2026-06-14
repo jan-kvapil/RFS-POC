@@ -8,23 +8,27 @@ Automated test suite for [RustFS](https://github.com/rustfs/rustfs) — an S3-co
 |------|---------|---------|
 | **Python 3.14+** | Test runtime | [python.org](https://www.python.org/downloads/) or `uv python install 3.14` |
 | **uv** | Package manager | [docs.astral.sh/uv](https://docs.astral.sh/uv/getting-started/installation/) |
-| **Docker Desktop** | Run RustFS containers | [docs.docker.com](https://docs.docker.com/get-docker/) |
-| **mc (MinIO Client)** | Management plane operations | [min.io/docs](https://min.io/docs/minio/linux/reference/minio-mc.html) |
+| **Docker Desktop** | Run RustFS containers & mc image | [docs.docker.com](https://docs.docker.com/get-docker/) |
+| **minio/mc Image** | Management plane operations | run `docker pull minio/mc` |
 
 ## Quick Start
 
 ```bash
-# 1. Install dependencies
+# 1. Clone the repository
+git clone git@github.com:jan-kvapil/RFS-POC.git
+cd RFS-POC
+
+# 2. Install dependencies
 uv sync
 
-# 2. Run full test suite (starts Docker containers automatically)
+# 3. Run full test suite (starts Docker containers automatically)
 uv run pytest
 
-# 3. Run specific test categories
+# 4. Run specific test categories
 uv run pytest -m data_plane      # S3 API tests only
 uv run pytest -m management      # Admin API tests only
 
-#4. Run Specific test
+# 5. Run Specific test
 uv run pytest tests/data_plane/test_s3_operations.py::TestBucketOperations::test_create_and_delete_bucket
 ```
 
@@ -98,7 +102,7 @@ uv run pytest --endpoint http://my-rustfs:9000
 - RustFS exposes MinIO-compatible admin API (used by `mc`)
 - Health endpoints `/minio/health/live` and `/minio/health/cluster` are unauthenticated
 - Docker Desktop is running and docker compose v2 is available
-- `mc` CLI binary is available in PATH
+- `minio/mc` Docker image is available locally for management tests
 - Tests run on single-node RustFS (as defined in docker-compose.yml)
 
 ## Limitations
@@ -107,7 +111,6 @@ uv run pytest --endpoint http://my-rustfs:9000
 - **No TLS testing** — docker-compose uses HTTP, not HTTPS
 - **No performance/load testing** — focus is on functional correctness
 - **No versioned bucket testing** — requires additional configuration
-- **mc CLI dependency** — management tests require external binary
 
 ## Manual Cleanup
 

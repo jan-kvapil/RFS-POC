@@ -45,8 +45,11 @@ class TestHealthEndpoints:
 
         # RustFS enforces auth on cluster health (unlike /health/live).
         # 200 = healthy, 403 = endpoint exists but requires authentication.
-        assert response.status_code in (200, 403), (
-            f"Unexpected status {response.status_code} — expected 200 or 403"
+        if response.status_code == 403:
+            pytest.xfail("403 is expected failure because endpoint exists but requires authentication")
+        
+        assert response.status_code == 200, (
+            f"Unexpected status {response.status_code} — expected 200"
         )
         log.info("PASS (status=%d): cluster health endpoint healthy", response.status_code)
 
